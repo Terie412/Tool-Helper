@@ -23,11 +23,9 @@ Renderdoc的工作流很简单。
 
 在此之前，你需要准备一个允许加载调试器的包。在Unity应用上体现为打包的时候，将Development Build勾选上。
 
-## 快速开始
 
 
-
-### 捕获帧
+## 捕获帧
 
 打开Renderdoc，点开 *Launch Application* 视图。
 
@@ -41,11 +39,36 @@ Renderdoc的工作流很简单。
 
 
 
-等应用启动完毕，就可以在Renderdoc的 [捕获](#buhuo) 视图捕获帧了。
+等应用启动完毕，Renderdoc会跳到一个用于捕获帧的视图：
+
+<img src="pictures/8.png" width=512>
+
+如上图所示，视图有四个部分组成，分别在图中用红色的数字标出：
+
+**1. Status** 状态。在这里你可以看到以下信息：
+
+- Target：调试的目标。由机器名称，调试的应用包名及其进程pid组成。
+- Connection Status：Renderdoc与机器的连接状态。
+- API：应用所使用的图形API。
+
+**2. Tools** 工具。在这里设置如何捕获：
+
+- Capture Frame(s) Immediately ：立即开始捕获。捕获多少帧在它上面的文本框中设置。
+- Capture After Delay：n 秒之后开始捕获。捕获多少帧也是在最上面的文本框中设置。
+- Capture Specific Frame(s)：捕获特定序号的帧。Renderdoc从启动应用开始，就为每一帧编了序号。当当前帧的序号等于你设置的捕获序号时，Renderdoc就会将该帧捕获下来。它其实发送了一个信号，这个信号通知Renderdoc的服务端等待特定序号的帧出现。由于帧的序号是递增的，所以如果设置的序号的帧已经渲染过了，那这个帧永远不会被捕获。
+
+**3. Captures collected** 显示捕获的帧。每个帧都包含自身的序号，大小和被捕获时的物理时间。
+
+**4** 底部的功能栏。功能有：
+
+- Preview：在Captures Collected窗口选择一个帧，点击Preview会展开一个预览窗口。
+- Open：打开当前选中的帧。
+- Save：保存帧。
+- Delete：删除帧。
 
 
 
-### 调试帧
+## 调试帧
 
 Renderdoc提供了很多视图为你调试提供便利。一些主要的视图包括：
 
@@ -89,5 +112,21 @@ Renderdoc提供了很多视图为你调试提供便利。一些主要的视图�
 
 
 
-**其他视图** 上面主要列举一些调试用的最经常使用到的视图。一些高级视图可以查看章节 [高级](#gaoji)
+**其他视图** 上面主要列举一些调试用的最经常使用到的视图。一些高级视图可以查看章节 [视图](#视图)
+
+
+
+<div STYLE="page-break-after: always;"></div>
+
+# <span href="shitu">视图</span>
+
+Renderdoc的每个视图都是一个功能的合集，它可能专门用来查看纹理，或者专门查看渲染管线，或者专门查看当前顶点着色器的输入的网格......如果你发现有某个视图没有显示出来，可以菜单栏中的`window`里打开它。
+
+下面我们对每个视图进行详细的介绍：
+
+
+
+## <span href="TextureView">Texture View</span>
+
+Texture View（纹理视图）
 
