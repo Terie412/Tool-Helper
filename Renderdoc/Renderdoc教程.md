@@ -1,10 +1,10 @@
-# 介绍
+# 一，介绍
 
 Renderdoc 是一个逐帧的图形调试器，适用于Vulkan，D3D11，D3D12，OpenGL和OpenGL ES多种图形API，适用于构建于Windows，Linux，Android，Stadia，和Nintendo Switch多种的平台的应用。
 
 
 
-## License
+## 1-1：License
 
 Renderdoc 基于 MIT 开源协议。所以Renderdoc对你的商用和非商用都没有任何限制。你可以在这里下载到它的源码：[https://github.com/baldurk/renderdoc](https://github.com/baldurk/renderdoc)
 
@@ -12,7 +12,7 @@ Renderdoc 基于 MIT 开源协议。所以Renderdoc对你的商用和非商用�
 
 <div STYLE="page-break-after: always;"></div>
 
-# 使用
+# 二，使用
 
 Renderdoc的工作流很简单。
 
@@ -25,7 +25,7 @@ Renderdoc的工作流很简单。
 
 
 
-## 捕获帧
+## 2-1：捕获帧
 
 打开Renderdoc，点开 *Launch Application* 视图。
 
@@ -68,13 +68,13 @@ Renderdoc的工作流很简单。
 
 
 
-## 调试帧
+## 2-2：调试帧
 
 Renderdoc提供了很多视图为你调试提供便利。一些主要的视图包括：
 
 
 
-**Texture Viewer** 纹理视图。在这个视图中你可以查看在绘制当前的帧的时每一步Drawcall在做的事情。从这个视图中，你可以知道GPU可能在：绘制网格，制作Mipmap，制作阴影贴图，渲染光照，应用后处理等等。你可以通过这个视图去查看当前帧所运用的纹理贴图或者RenderTexture，可以查看当前GPU在缓冲中的输出或者输入的纹理。更多信息请参考章节 [Texture View](#TextureView)
+**Texture Viewer** 纹理视图。在这个视图中你可以查看在绘制当前的帧的时每一步Drawcall在做的事情。从这个视图中，你可以知道GPU可能在：绘制网格，制作Mipmap，制作阴影贴图，渲染光照，应用后处理等等。你可以通过这个视图去查看当前帧所运用的纹理贴图或者RenderTexture，可以查看当前GPU在缓冲中的输出或者输入的纹理。更多信息请参考章节 [Texture Viewer](#TextureViewer)
 
 下图显示此刻GPU在绘制两个树形网格。
 
@@ -112,13 +112,13 @@ Renderdoc提供了很多视图为你调试提供便利。一些主要的视图�
 
 
 
-**其他视图** 上面主要列举一些调试用的最经常使用到的视图。一些高级视图可以查看章节 [视图](#视图)
+**其他视图** 上面主要列举一些调试用的最经常使用到的视图。一些高级视图可以查看章节 [视图](#shitu)
 
 
 
 <div STYLE="page-break-after: always;"></div>
 
-# <span href="shitu">视图</span>
+# <span id="shitu">三，视图</span>
 
 Renderdoc的每个视图都是一个功能的合集，它可能专门用来查看纹理，或者专门查看渲染管线，或者专门查看当前顶点着色器的输入的网格......如果你发现有某个视图没有显示出来，可以菜单栏中的`window`里打开它。
 
@@ -126,7 +126,7 @@ Renderdoc的每个视图都是一个功能的合集，它可能专门用来查�
 
 
 
-## <span href="TextureView">Texture View</span>
+## <span id="TextureViewer">3-1：Texture Viewer</span>
 
 <img src="pictures/9.png" width=512>
 
@@ -193,4 +193,59 @@ Texture View（纹理视图）主要是查看当前Drawcall中所使用的纹理
 下面这部分用黑色游标和白色游标划定三个区域。在当前纹理中任意一个像素值必定处于这三个区域中的一个。处于不同区域的像素会有不同的表现，具体如何表现还跟Overlay有关。例如在None模式下，低于黑色游标的像素会变黑色，高于白色游标的区域的像素会变白色。当黑色游标和白色游标重合时，纹理会显示为一张纯黑和纯白的图。你还可以点击最后一个按钮，显示当前纹理中像素值的分布柱状图。
 
 <img src="pictures/9-7.png" width=512>
+
+
+
+## <span id="EventBrowser">3-2：Event Browser</span>
+
+事件浏览器是最重要的一个视图之一：它会显示当前一系列的API调用，具体显示什么取决于用户代码中的注解。例如在OpenGL中，被`glPushDebugGroupKHR`包围起来的API就会被Renderdoc捕获并显示在EventBrowser中。Renderdoc会展开最上层的API，直到展开到图形API层面，于是会看到一定的调用层级。
+
+```c
+// omitted code to initialise the extension
+glPushDebugGroupKHR(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Begin Section");
+// contents of section here
+glPopDebugGroupKHR();
+```
+
+<img src="pictures/11.png" width=512>
+
+**列** 默认的列只有 EID 和 Name两项。我们可以在任意一个列名上面右键 -> Select Columns，然后把所有的选上。会多出 Draw # 和 Duration (μs) 两列。
+
+- EID：注解中每一个API被调用，都会使EID加一。注意，不是所有的API都会显示出来，所以你会看到EID并不是连续的。其中，Drawcall类型的API可以通过[API Inspector](#APIInspector)显示其隐藏的API。
+- Name：API的名字。如果Drawcall类型的API，后面还会跟一些重要的参数在一对圆括号里面。比如`glDrawElements`会显示其绘制的图元数量，`glClear`会显示其清除属性和清除值。
+- Draw #：表示到当前API调用位置，已经发生了多少了Drawcall类型的API调用。
+- Duration（μs）：API调用耗时。你需要点击Event Browser中的工具栏里的时钟图标，这一列才会显示出值。
+
+
+
+**工具栏** 主要有以下这些图标：
+
+<img src="pictures/11-1.png" width=512>
+
+- 左箭头/右箭头：跳转到上一个Drawcall调用/跳转到下一个Drawcall调用。
+- 望远镜：弹出一个文本框，在里面输入字符串，通过字符串查找API。
+- 旗帜：弹出一个文本框，输入EID，跳转到对应的API。
+- 时钟：显示Duration（μs）列，并列出API的耗时。
+- 四杠：选择显示哪些列。
+- 六角星：为当前选中的API添加书签标记。
+- 软盘：保存当前帧的Event Browser为文本。
+- 拼图：？
+
+
+
+## <span id="APIInspector">3-3：API Inspector</span>
+
+API Inspector视图只有你在 [Event Browser](#EventBrowser) 中选中一个Drawcall调用的时候，这个视图才会出现东西。它分成两部分：上半部分显示的从上一个Drawcall到当前Drawcall的图形API调用。下半部分会显示当前Drawcall的调用堆栈，会一直追溯到用户代码。一般情况下，下半部分不会出现东西，因为需要一些特殊的设置，并且加载和解析符号表，过程十分耗时。
+
+<img src="pictures/10.png" width=512>
+
+**上半部分** 上半部分有两部分组成：EID和Event，分别代表API的调用序号和API名称。这一列API的最后一个一定是一个Drawcall类型的API，并且与你当前在[Event Browser](#EventBrowser)中选中的API对应。而上面的API序列表示自从上次发生Drawcall到当前Drawcall调用时所发生的图形API的调用。例如，如果是Opengl的平台，那显示的都是Opengl的函数；如果是Vulkan，那显示的就是Vulkan的函数，类似于这样：
+
+<img src="pictures/10-1.png" width=512>
+
+点击API序号左侧的右向箭头可以展开显示当前API的参数：
+
+<img src="pictures/10-2.png" width=512>
+
+**下半部分** 略（很遗憾没有成功加载符号表）
 
