@@ -94,7 +94,7 @@ Renderdoc提供了很多视图为你调试提供便利。一些主要的视图�
 
 
 
-**Timeline Bar** 时间线视图。这个视图可是看作是 [Event Browser](#EventBrowser) 的另一个版本。它将 [Event Browser](#EventBrowser) 中的函数按照时间线进行排列，你可以在这个视图上清晰看到每个函数在当前帧中所占用的相对时间，以及每个Drawcall在时间线上所处的位置。更多信息请参考 [Timeline Bar](#TimelineBar)
+**Timeline** 时间线视图。这个视图可是看作是 [Event Browser](#EventBrowser) 的另一个版本。它将 [Event Browser](#EventBrowser) 中的函数按照时间线进行排列，你可以在这个视图上清晰看到每个函数在当前帧中所占用的相对时间，以及每个Drawcall在时间线上所处的位置。更多信息请参考 [Timeline](#Timeline)
 
 <img src="pictures/5.png" width=512>
 
@@ -158,7 +158,7 @@ Texture View（纹理视图）主要是查看当前Drawcall中所使用的纹理
 下面这部分可以对当前纹理完成一些动作。从左到右分别是：
 
 - 保存当前纹理
-- 显示当前帧所用到的纹理列表
+- 显示当前帧所用到的<span id="OpenTextureList">**纹理列表**</span>
 - 打开一个新视图显示当前纹理的数据
 - 通过输入坐标，显示对应坐标的像素信息
 - 在Resource视图中的显示当前纹理的信息
@@ -193,6 +193,40 @@ Texture View（纹理视图）主要是查看当前Drawcall中所使用的纹理
 下面这部分用黑色游标和白色游标划定三个区域。在当前纹理中任意一个像素值必定处于这三个区域中的一个。处于不同区域的像素会有不同的表现，具体如何表现还跟Overlay有关。例如在None模式下，低于黑色游标的像素会变黑色，高于白色游标的区域的像素会变白色。当黑色游标和白色游标重合时，纹理会显示为一张纯黑和纯白的图。你还可以点击最后一个按钮，显示当前纹理中像素值的分布柱状图。
 
 <img src="pictures/9-7.png" width=512>
+
+
+
+### 纹理列表
+
+在工具栏的[这一项](#OpenTextureList)打开纹理列表。这里列出当前帧所用到的所有纹理，包括预输入的和动态生成（Shadow Map等）的。
+
+<img src="pictures/9-8.png" width=512>
+
+### 主预览窗口
+
+当你在纹理列表选中一个纹理时，主预览窗口会显示你当前选中的纹理。当你点击预览缩略图中的其中一项时，主预览窗口会显示当前选中的缩略图中的内容。在主预览窗口中移动鼠标，状态栏会更新更新当前鼠标所在位置的像素的信息。当你右键点击时，像素窗口会显示当前像素及其附近部分像素的特写。
+
+<img src="pictures/9-9.png" width=512>
+
+### 当前选中的像素内容
+
+见**主预览窗口**。
+
+<img src="pictures/9-10.png" width=512>
+
+### 状态栏
+
+状态栏显示以下内容：
+
+- 当前纹理的名称
+- 纹理大小
+- mipmap数量
+- 图像格式
+- 当前选中像素的坐标和RGBA信息
+
+<img src="pictures/9-11.png" width=512>
+
+
 
 
 
@@ -249,3 +283,22 @@ API Inspector视图只有你在 [Event Browser](#EventBrowser) 中选中一个Dr
 
 **下半部分** 略（很遗憾没有成功加载符号表）
 
+
+
+## <span id="Timeline">3-4：Timeline</span>
+
+Timeline是[Event Browser](#EventBrowser)的另一种形式，它以火焰图的形式呈现API的调用堆栈。在火焰图的最顶端，即图中每一个蓝色节点都对应[Event Browser](#EventBrowser)中的一个Drawcall。但是这个Timeline上的“时间坐标”是指API的EID，对应的API的调用次序，并不能反应每个API消耗的物理时间。
+
+<img src="pictures/12.png" width=512>
+
+Timeline最重要的一个功能是查看纹理的读写发生的位置。通过在Texture View上的Texture List里选中其中一个纹理，在Timeline的底部会出现一些最多四种不同颜色的三角形。每种颜色三角形的含义写在了左上角：分别表示读，写，读/写，清除四种纹理操作。每个三角形所处的位置表示当前选中的纹理在当前三角形的位置上发生了对应的纹理操作。
+
+![image-20200630203851345](C:\Users\qintianchen\AppData\Roaming\Typora\typora-user-images\image-20200630203851345.png)
+
+
+
+## <span id="PipelineState">3-5：Pipeline State</span>
+
+Pipeline State 视图，即渲染管线状态视图呈现当前Drawcall对应的渲染管线，是一个包含信息非常多的视图。它主要由两部分组成，一部分最上面的管线流程图，剩下的就是另一部分，这部分在你选中管线流程图中的任意一个阶段时都会相应地更新出信息。
+
+<img src="pictures/13.png" width=512>
