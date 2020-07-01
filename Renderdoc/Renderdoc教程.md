@@ -299,6 +299,29 @@ Timeline最重要的一个功能是查看纹理的读写发生的位置。通过
 
 ## <span id="PipelineState">3-5：Pipeline State</span>
 
-Pipeline State 视图，即渲染管线状态视图呈现当前Drawcall对应的渲染管线，是一个包含信息非常多的视图。它主要由两部分组成，一部分最上面的管线流程图，剩下的就是另一部分，这部分在你选中管线流程图中的任意一个阶段时都会相应地更新出信息。
+Pipeline State 视图，即渲染管线状态视图，呈现当前Drawcall对应的渲染管线，是一个包含信息非常多的视图。它主要由两部分组成，一部分是最上面的管线流程图，剩下的就是另一部分，这部分在你选中管线流程图中的任意一个阶段时都会相应地更新出信息。其中第一部分包含以下几个管线阶段：
+
+- Vertex Input：顶点数据的输入
+- Vertex Sahder：顶点着色器
+- TCS：Tessellation Control Shader 细分控制着色器
+- TES：Tessellation Evaluation Shader 曲面细分着色器
+- Geometry Shader：几何着色器
+- Rasterizer：光栅化
+- Fragment Shader：片元着色器
+- FB：FrameBuffer 帧缓冲
+- Compute Shader：计算着色器
+
+这些阶段并非所有的都会用上。被执行的阶段黑框白底，而没有执行的阶段呈灰色。
 
 <img src="pictures/13.png" width=512>
+
+在几个着色器阶段（顶点，几何，曲面细分，片元），你可以在第二部分点击查看他们对应的Shader信息，包括Shader的名称和反编译之后的GLSL源码。在其他数据阶段（顶点数据输入和FrameBuffer）可以查看内部的数据的详细信息。例如顶点数据输入阶段，可以查看每个顶点元素的值，可以跳转到Mesh View视图查看这些数据所呈现的网格概览；在FrameBuffer阶段查看混合，深度测试和模板测试的状态。
+
+
+
+## <span id="MeshViewer">3-6：MeshViewer</span>
+
+网格查看器主要用来查看两样东西：顶点着色器的输入和输出。MeshViewer上半部分显示对应的具体的数值，下半部分可视化显示了这些数据。
+
+<img src="pictures/14.png" width=512>
+
